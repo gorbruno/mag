@@ -166,28 +166,29 @@ workflow PIPELINE_INITIALISATION {
     }
 
     // Cross validation of input mmseqs and read IDs: ensure groups are all represented between reads and mmseqs taxonomy
-    if (params.assembly_input) {
-        ch_read_ids = ch_samplesheet
-            .map { meta, _sr1, _sr2, _lr -> params.coassemble_group ? meta.group : meta.id }
-            .unique()
-            .toList()
-            .sort()
+    // TODO
+    // if (params.taxonomy_input) {
+    //     ch_read_ids = ch_samplesheet
+    //         .map { meta, _sr1, _sr2, _lr -> params.coassemble_group ? meta.group : meta.id }
+    //         .unique()
+    //         .toList()
+    //         .sort()
 
-        ch_taxonomy_ids = ch_input_taxonomy
-            .map { meta, _fasta -> params.coassemble_group ? meta.group : meta.id }
-            .unique()
-            .toList()
-            .sort()
+    //     ch_taxonomy_ids = ch_input_taxonomy
+    //         .map { meta, _fasta -> params.coassemble_group ? meta.group : meta.id }
+    //         .unique()
+    //         .toList()
+    //         .sort()
 
-        ch_read_ids
-            .concat(ch_taxonomy_ids)
-            .collect(flat: false)
-            .map { ids1, ids2 ->
-                if (ids1.sort() != ids2.sort()) {
-                    exit(1, "[nf-core/mag] ERROR: supplied IDs or Groups in read and mmseqs CSV files do not match!")
-                }
-            }
-    }
+    //     ch_read_ids
+    //         .concat(ch_taxonomy_ids)
+    //         .collect(flat: false)
+    //         .map { ids1, ids2 ->
+    //             if (ids1.sort() != ids2.sort()) {
+    //                 exit(1, "[nf-core/mag] ERROR: supplied IDs or Groups in read and mmseqs CSV files do not match!")
+    //             }
+    //         }
+    // }
 
     emit:
     raw_short_reads  = ch_raw_short_reads
