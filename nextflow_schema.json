@@ -208,13 +208,11 @@
                 "sample_name_pattern": {
                     "type": "string",
                     "description": "Regular expression pattern to retrieve integer value from sample names (default: '')",
-                    "default": "",
                     "fa_icon": "fas fa-cog"
                 },
                 "save_excel": {
                     "type": "boolean",
                     "description": "Save crucial output tables in excel format (default: false).",
-                    "default": false,
                     "fa_icon": "fas fa-cog"
                 },
                 "validate_params": {
