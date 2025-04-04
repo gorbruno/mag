@@ -16,7 +16,7 @@ include { FASTA_BINNING_CONCOCT                 } from '../../subworkflows/nf-co
 workflow BINNING {
     take:
     assemblies           // channel: [ val(meta), path(assembly), path(bams), path(bais) ]
-    // reads                // channel: [ val(meta), [ reads ] ]
+    reads                // channel: [ val(meta), [ reads ] ]
 
     main:
 
