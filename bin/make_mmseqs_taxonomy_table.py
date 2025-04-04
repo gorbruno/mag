@@ -92,6 +92,9 @@ def parser_args(args=None):
     parser.add_argument(
         "-st", "--search_type", type=int, default = 2, help="Search type of mmseqs used to map the taxonomy (default: 2)."
     )
+    parser.add_argument(
+        "-ss", "--skip_sample", type=str, default = '', help="Skip sample if necessary, e.g. -ss sample1,sample2  (default: '')."
+    )
     return parser.parse_args(args)
 
 def make_dir(path):
@@ -188,12 +191,18 @@ def main(args=None):
     report_files = get_file_dict(args.mmseqs2_dir, args.report_file_suffix, args.mmseqs_file_prefix, args.pattern_sample)
     contigs_files = get_file_dict(args.contigs_dir, args.contigs_file_suffix, args.contigs_file_prefix, args.pattern_sample)
 
+    for dictionary in [aln_files, report_files, contigs_files]:
+        for sample in dictionary:
+            if args.skip_sample and sample in args.skip_sample.split(","):
+                logger.warning(f"Skip sample {sample}!")
+                del dictionary[sample]
+
     if set(aln_files) != set(report_files):
         logger.error(
             f"Number of tophit alignment ({len(aln_files)}) and tophit report ({len(report_files)}) files do not match!"
         )
         sys.exit(1)
-    else: 
+    else:
         if set(aln_files) != set(contigs_files):
                 logger.error(
                     f"Number of tophit alignment ({len(aln_files)}) and contigs ({len(contigs_files)}) files do not match!"
@@ -218,9 +227,9 @@ def main(args=None):
             merged_table["database"] = args.database
 
             sample_tables.append(merged_table)
-        
+
     if sample_tables:
-        
+
         cols_order: list[str] = [
             'sample', 'qseqid', 'contig_length', 'kmer_cov', 'seq', 'sseqid', 'pident',
             'length', 'mismatch', 'gapopen', 'qstart', 'qend', 'sstart', 'send',
