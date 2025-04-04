@@ -1,9 +1,9 @@
 process MAKE_MMSEQS_TAXONOMY_TABLE {
 
-    conda "conda-forge::python=3.12.8 conda-forge::pandas=2.2.3 conda-forge::xlsxwriter=3.2.2 conda-forge::biopython=1.85"
+    conda "conda-forge::python=3.13.2 conda-forge::pandas=2.2.3 conda-forge::xlsxwriter=3.2.2 conda-forge::biopython=1.85"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-77320db00eefbbf8c599692102c3d387a37ef02a:08144a66f00dc7684fad061f1466033c0176e7ad-0' :
-        'quay.io/biocontainers/mulled-v2-77320db00eefbbf8c599692102c3d387a37ef02a:08144a66f00dc7684fad061f1466033c0176e7ad-0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/4f/4fb33d12be2d1117d1f9591424797bfa4491d1862ce4073a386e636b31c7072d/data' :
+        'community.wave.seqera.io/library/biopython_pandas_python_xlsxwriter:bf905fc7253d1387' }"
 
     input:
     tuple val(meta), path('mmseqs2/*')
