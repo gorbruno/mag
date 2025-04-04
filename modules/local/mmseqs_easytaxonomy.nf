@@ -24,7 +24,7 @@ process MMSEQS_EASYTAXONOMY {
     script:
     def args        = task.ext.args              ?: ''
     def args2       = task.ext.args2             ?: "*.dbtype"
-    def search_type = task.ext.search_type       ?: 2
+    def search_type = params.mmseqs2_search_type ?: 2
     prefix          = task.ext.prefix            ?: "${meta.id}"
     meta3           = [search_type: search_type]
     """
