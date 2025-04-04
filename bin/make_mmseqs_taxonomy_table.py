@@ -112,7 +112,6 @@ def get_file_dict(file_dir, file_suffix, file_prefix="", pattern=None):
     samples = [os.path.basename(x).removeprefix(f"{file_prefix}").removesuffix(f"{file_suffix}") for x in files]
     return dict(zip(samples, files))
 
-# ".*[a-zA-Z]-[A-Z]?([0-9]+)[A-Z]?_S[0-9]+"
 def eval_sample_num(pattern: str, string: str) -> int:
     match = re.search(pattern, string)
     num = None
