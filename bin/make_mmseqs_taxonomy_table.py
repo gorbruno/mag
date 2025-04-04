@@ -77,7 +77,7 @@ def parser_args(args=None):
         "-of",
         "--output_file",
         type=str,
-        default="contigs.taxonomy.csv",
+        default="mmseqs2_contigs_taxonomy.csv",
         help="Full path to output file (default: 'contigs.taxonomy.csv').",
     )
     parser.add_argument(
