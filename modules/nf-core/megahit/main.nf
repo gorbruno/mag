@@ -10,7 +10,7 @@ process MEGAHIT {
     tuple val(meta), path(reads1), path(reads2)
 
     output:
-    tuple val(meta), path("*.contigs.fa.gz")                            , emit: contigs, optional: true
+    tuple val(meta), path("*.contigs.fa.gz")                            , emit: contigs
     tuple val(meta), path("intermediate_contigs/k*.contigs.fa.gz")      , emit: k_contigs
     tuple val(meta), path("intermediate_contigs/k*.addi.fa.gz")         , emit: addi_contigs
     tuple val(meta), path("intermediate_contigs/k*.local.fa.gz")        , emit: local_contigs
@@ -28,29 +28,17 @@ process MEGAHIT {
     def reads_command = meta.single_end || !reads2 ? "-r ${reads1.join(',')}" : "-1 ${reads1.join(',')} -2 ${reads2.join(',')}"
     """
     megahit \\
-        ${reads_command} \\
         ${args} \\
         -t ${task.cpus} \\
+        ${reads_command} \\
         --out-prefix ${prefix}
 
     pigz \\
         --no-name \\
         -p ${task.cpus} \\
         ${args2} \\
+        megahit_out/*.fa \\
         megahit_out/intermediate_contigs/*.fa
-
-    ## It was the easiest solutions
-    ## TODO: add complex logic
-    mkdir empty
-    if [ -s megahit_out/*.fa ]; then
-        pigz \\
-            --no-name \\
-            -p ${task.cpus} \\
-            ${args2} \\
-            megahit_out/*.fa
-    else
-        mv megahit_out/*.fa empty
-    fi
 
     mv megahit_out/* .
 
