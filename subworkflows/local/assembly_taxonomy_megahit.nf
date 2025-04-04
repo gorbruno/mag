@@ -14,7 +14,6 @@ workflow ASSEMBLY_TAXONOMY_MEGAHIT {
 
     ch_contigs = MEGAHIT.out.contigs
 
-
     ch_megahit_assemblies = ch_contigs.map { meta, assembly ->
         def meta_new = meta + [assembler: 'MEGAHIT']
         [meta_new, assembly]
