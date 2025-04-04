@@ -7,8 +7,7 @@ process MAKE_MMSEQS_TAXONOMY_TABLE {
 
     input:
     tuple val(meta), path('mmseqs2/*')
-    path ('contigs/*')
-    val  outname
+    tuple val(meta2), path('contigs/*')
 
     output:
     tuple val(meta), path("*.csv")       , emit: csv
@@ -20,23 +19,11 @@ process MAKE_MMSEQS_TAXONOMY_TABLE {
 
     script:
     def args = task.ext.args       ?: ''
-    def pattern = task.ext.pattern ?: ''
     """
     make_mmseqs_taxonomy_table.py \\
-        --pattern_sample $pattern \\
-        --mmseqs2_dir ./mmseqs2 \\
-        --contigs_dir ./contigs \\
-        --output_file $outname \\
+        --contigs_file_prefix "${meta.assembler}-" \\
+        --database ${meta.mmseqs2_db_name}
         $args
-
-    echo $meta.mmseqs2_db_name
-    echo $meta
-
-    if [[ $outname != "merged" ]]; then
-        # find . -name "variants_long_table.*" -exec sh -c "mv \$1 ${outname}.variants.\${1##*.}" rename {} \; TODO
-        mv variants_long_table.csv ${outname}.variants.csv
-        mv variants_long_table.xlsx ${outname}.variants.xlsx #may fail
-    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
