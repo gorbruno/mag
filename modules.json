@@ -167,6 +167,11 @@
                         "git_sha": "e06548bfa36ee31869b81041879dd6b3a83b1d57",
                         "installed_by": ["modules"]
                     },
+                    "kraken2/kraken2": {
+                        "branch": "master",
+                        "git_sha": "409a308ba46284d8ebb48c2c1befd6f6433db3f7",
+                        "installed_by": ["modules"]
+                    },
                     "krakentools/kreport2krona": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
@@ -189,7 +194,7 @@
                     },
                     "megahit": {
                         "branch": "master",
-                        "git_sha": "d6ff43e046fcbc552d18050470592c9974a23e67",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "metabat2/jgisummarizebamcontigdepths": {
