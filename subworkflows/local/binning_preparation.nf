@@ -21,20 +21,24 @@ workflow BINNING_PREPARATION {
             .combine(reads)
     } else if (params.binning_map_mode == 'group'){
         // combine assemblies with reads of samples from same group
-        ch_reads_bowtie2 = reads.map{ meta, reads_in -> [ meta.group, meta, reads_in ] }
+        ch_reads_bowtie2 = reads.map{ meta, sample_reads -> [ meta.group, meta, sample_reads ] }
         ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
             .map { meta, assembly, index -> [ meta.group, meta, assembly, index ] }
             .combine(ch_reads_bowtie2, by: 0)
-            .map { _group, assembly_meta, assembly, index, reads_meta, reads_in -> [ assembly_meta, assembly, index, reads_meta, reads_in ] }
+            .map { _group, assembly_meta, assembly, index, reads_meta, sample_reads ->
+                [ assembly_meta, assembly, index, reads_meta, sample_reads ]
+            }
 
     } else {
         // i.e. --binning_map_mode 'own'
         // combine assemblies (not co-assembled) with reads from own sample
-        ch_reads_bowtie2 = reads.map{ meta, reads_in -> [ meta.id, meta, reads_in ] }
+        ch_reads_bowtie2 = reads.map{ meta, sample_reads -> [ meta.id, meta, sample_reads ] }
         ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
             .map { meta, assembly, index -> [ meta.id, meta, assembly, index ] }
             .combine(ch_reads_bowtie2, by: 0)
-            .map { _id, assembly_meta, assembly, index, reads_meta, reads_in -> [ assembly_meta, assembly, index, reads_meta, reads_in ] }
+            .map { _id, assembly_meta, assembly, index, reads_meta, sample_reads ->
+                [ assembly_meta, assembly, index, reads_meta, sample_reads ]
+            }
 
     }
 

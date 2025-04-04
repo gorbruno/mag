@@ -56,4 +56,22 @@ process MAXBIN2 {
         maxbin2: \$( run_MaxBin.pl -v | head -n 1 | sed 's/MaxBin //' )
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    if (reads && abund) { error("ERROR: MaxBin2 can only accept one of `reads` or `abund`, no both. Check input.") }
+    """
+    echo "" | gzip > ${prefix}.log.gz
+    echo "" | gzip > ${prefix}.marker.gz
+    echo "" | gzip > ${prefix}.marker_of_each_bin.gz
+    echo "" | gzip > ${prefix}.noclass.gz
+    touch ${prefix}.summary
+    echo "" | gzip > ${prefix}.tooshort.gz
+    echo "" | gzip > ${prefix}.001.fasta.gz
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        maxbin2: \$( run_MaxBin.pl -v | head -n 1 | sed 's/MaxBin //' )
+    END_VERSIONS
+    """
 }
