@@ -502,6 +502,13 @@
                     "format": "file-path",
                     "exists": true
                 },
+                "krona_mmseqs2_db": {
+                    "type": "string",
+                    "description": "Custom taxdump database for taxonomic binning with krona",
+                    "help_text": "Path to `taxonomy.tab` file for Krona, instead of downloading the default file. Point at the `.tab` file.",
+                    "format": "file-path",
+                    "exists": true
+                },
                 "mmseqs2_db": {
                     "type": "string",
                     "format": "path",
