@@ -11,6 +11,7 @@ import sys
 import re
 import os
 
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
 def parser_args(args=None):
@@ -21,8 +22,8 @@ def parser_args(args=None):
         "-p",
         "--pattern_sample",
         type=str,
-        default=None,
-        help="Pattern to sort samples by their numeric features (default: None).",
+        default="[a-zA-Z]*-[A-Z]?([0-9]+)[A-Z]?_S[0-9]+",
+        help="Pattern to sort samples by their numeric features (default: '[a-zA-Z]*-[A-Z]?([0-9]+)[A-Z]?_S[0-9]+').",
     )
     parser.add_argument(
         "-mm",
@@ -105,11 +106,15 @@ def make_dir(path):
             if exception.errno != errno.EEXIST:
                 raise
 
-def get_file_dict(file_dir, file_suffix, file_prefix="", pattern=None):
-    files = glob.glob(os.path.join(file_dir, f"*{file_suffix}"))
-    if pattern:
-        files.sort(key=lambda x: eval_sample_num(pattern=pattern, string=x))
+def get_file_dict(file_dir, file_suffix="", file_prefix="", pattern=None):
+    files_pattern = os.path.join(os.path.expanduser(file_dir), f"*{file_suffix}")
+    files = glob.glob(files_pattern)
     samples = [os.path.basename(x).removeprefix(f"{file_prefix}").removesuffix(f"{file_suffix}") for x in files]
+    if pattern:
+        try:
+            samples.sort(key=lambda x: eval_sample_num(pattern=pattern, string=x))
+        except Exception as e:
+            logger.warning(e)
     return dict(zip(samples, files))
 
 def eval_sample_num(pattern: str, string: str) -> int:
@@ -119,8 +124,7 @@ def eval_sample_num(pattern: str, string: str) -> int:
         num = match.group(1)
     if num and num.isdigit():
         return int(num)
-    logger.error(f"Found {num} in {string} which is not an integer!")
-    sys.exit(1)
+    logger.warning(f"Found {num} in {string} which is not an integer!")
 
 def search_type_int_to_str(stype: int) -> str:
     stype_dict = {
